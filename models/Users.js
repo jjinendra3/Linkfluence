@@ -25,6 +25,12 @@ const UserSchema = new Schema({
     required: true,
     enum: ["Company", "Influencer", "Event"],
   },
+  verified: {
+    type: Number,
+    required: true,
+    default: 0,
+    enum: [-1, 0, 1], //0 is pending, -1 is rejected, 1 is approved
+  },
 });
 
 module.exports = mongoose.model("User", UserSchema);

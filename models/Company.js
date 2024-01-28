@@ -13,6 +13,11 @@ const CompanySchema = Users.discriminator(
       type: String,
       required: true,
     },
+    products_id: {
+      type: Array,
+      of: String,
+      default: ["init"],
+    },
   }),
 );
 

@@ -8,15 +8,25 @@ const Event = require("../models/EventManagement");
 const bcrypt = require("bcrypt");
 const Users = require("../models/Users");
 const saltRounds = 10;
-
+function ValidateEmail(mail) {
+  // eslint-disable-next-line
+  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+    return false;
+  }
+  return true;
+}
 app.post("/signup", uniqueness, async (req, res) => {
-  if (req.checker) {
-    return res
-      .status(401)
-      .send("User with this email or phone number already exists!");
+  if (!req.checker) {
+    return res.send({
+      sucess: false,
+      msg: "User already existsusing phone/mail.",
+    });
   } else {
     try {
       let obj = req.body;
+      if (ValidateEmail(req.body.email)) {
+        return res.send({ sucess: false, msg: "Write correct mail format" });
+      }
       await bcrypt.hash(obj.password, saltRounds, async function (err, hash) {
         if (err) {
           throw res.send("error");
@@ -31,10 +41,10 @@ app.post("/signup", uniqueness, async (req, res) => {
           }
         }
       });
-      return res.send("Sucessful");
+      return res.send({ success: true, msg: "Succesful" });
     } catch (error) {
       console.log(error);
-      return res.send("error");
+      return res.send({ sucess: false, msg: error });
     }
   }
 });

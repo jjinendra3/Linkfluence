@@ -6,7 +6,7 @@ const InfluencerSchema = Users.discriminator(
   "Influencer",
   new Schema({
     platform: {
-      type: Map, //many platforms, name of platform and link /username
+      type: Map, //many platforms,  link:number of followers
       required: true,
       default: { defaultPlatform: "defaultHandle" },
     },
