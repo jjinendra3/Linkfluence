@@ -1,8 +1,9 @@
-import { Container, Typography } from "@mui/material";
 import React, { useState } from "react";
 import Register from "../components/Register";
+import Login from "../components/Login";
 const Home = () => {
   const [accType, setAccType] = useState(null);
+  const [authType, setauthType] = useState("login");
   const handleType=(e)=>{
     setAccType(e.target.value);
   }
@@ -34,8 +35,11 @@ const Home = () => {
             </label>
           </div>
         </div>
-        <div className="container w-1/2 bg-black flex justify-center items-center h-full">
-            <Register accType={accType}/>
+        <div className="container w-1/2 bg-slate-900 flex justify-center items-center h-full">
+            {authType==="login"?
+            <Login accType={accType} setauthType={setauthType}/>:
+            <Register accType={accType}  setauthType={setauthType} />
+            }
         </div>
       </div>
     </>
