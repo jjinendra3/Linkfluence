@@ -18,6 +18,18 @@ const CompanySchema = Users.discriminator(
       of: String,
       default: ["init"],
     },
+    influencercontracts: {
+      type: Array,
+      of: String,
+      default: ["init"],
+      required: true,
+    },
+    eventcontracts: {
+      type: Array,
+      of: String,
+      default: ["init"],
+      required: true,
+    },
   }),
 );
 

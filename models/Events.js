@@ -31,6 +31,19 @@ const Events = new Schema({
     type: String,
     required: true,
   },
+  months: {
+    type: Array,
+    required: true,
+  },
+  years: {
+    type: Array,
+    required: true,
+  },
+  images: {
+    type: Array,
+    required: true,
+    default: [""],
+  },
 });
 
 module.exports = mongoose.model("Events", Events);

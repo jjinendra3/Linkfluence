@@ -24,6 +24,8 @@ app.post("/signup", uniqueness, async (req, res) => {
   } else {
     try {
       let obj = req.body;
+      const type = obj.type;
+      delete obj.type;
       if (ValidateEmail(req.body.email)) {
         return res.send({ sucess: false, msg: "Write correct mail format" });
       }
@@ -31,15 +33,20 @@ app.post("/signup", uniqueness, async (req, res) => {
         if (err) {
           throw res.send("error");
         } else {
-          obj.password = hash;
-          if (obj.type === "Company") {
-            await Company.create(obj);
-          } else if (obj.type === "Event") {
-            await Event.create(obj);
-          } else {
-            await Influencer.create(obj);
+          try {
+            obj.password = hash;
+            if (type === "Company") {
+              await Company.create(obj);
+            } else if (type === "Event") {
+              await Event.create(obj);
+            } else {
+              await Influencer.create(obj);
+            }
+          } catch (error) {
+            throw error;
           }
         }
+        return;
       });
       return res.send({ success: true, msg: "Succesful" });
     } catch (error) {
@@ -68,7 +75,11 @@ app.post("/login", async (req, res) => {
       let st = user_detail._id.toString();
       obj.key = st;
       let privateKey = "YOUR_PRIVATE_KEY";
-      jwt.sign(obj.key, privateKey, async function (err, token) {
+      let oobj = {
+        key: obj.key,
+        type: obj.__t,
+      };
+      jwt.sign(oobj, privateKey, async function (err, token) {
         if (err) {
           return res.send({ s: false, error: "Please try Again later!" });
         }

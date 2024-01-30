@@ -20,16 +20,27 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-    enum: ["Company", "Influencer", "Event"],
-  },
   verified: {
     type: Number,
     required: true,
     default: 0,
     enum: [-1, 0, 1], //0 is pending, -1 is rejected, 1 is approved
+  },
+  photo: {
+    type: String,
+    default:
+      "https://t3.ftcdn.net/jpg/05/53/79/60/360_F_553796090_XHrE6R9jwmBJUMo9HKl41hyHJ5gqt9oz.jpg",
+  },
+  pricerange: {
+    type: Number,
+    required: true,
+    enum: [1, 2, 3, 4, 5],
+  },
+  badges: {
+    type: Number,
+    required: true,
+    enum: [1, 2, 3, 4, 5],
+    default: 1, //basically novice if 1, then every 3 contracts thru the app, they will be promoted
   },
 });
 

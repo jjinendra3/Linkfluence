@@ -14,6 +14,18 @@ const InfluencerSchema = Users.discriminator(
       type: String,
       required: true,
     },
+    companycontracts: {
+      type: Array,
+      of: String,
+      default: ["init"],
+      required: true,
+    },
+    eventcontracts: {
+      type: Array,
+      of: String,
+      default: ["init"],
+      required: true,
+    },
   }),
 );
 module.exports = mongoose.model("Influencer");
