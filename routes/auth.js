@@ -7,6 +7,7 @@ const Influencer = require("../models/Influencers");
 const Event = require("../models/EventManagement");
 const bcrypt = require("bcrypt");
 const Users = require("../models/Users");
+const Followers = require("../middleware/Followers");
 const saltRounds = 10;
 function ValidateEmail(mail) {
   // eslint-disable-next-line
@@ -15,7 +16,13 @@ function ValidateEmail(mail) {
   }
   return true;
 }
-app.post("/signup", uniqueness, async (req, res) => {
+app.post("/signup", uniqueness,Followers, async (req, res) => {
+  if(req.error){
+    return res.send({
+      sucess: false,
+      msg: "Platform verification error.",
+    });
+  }
   if (!req.checker) {
     return res.send({
       sucess: false,
@@ -29,28 +36,18 @@ app.post("/signup", uniqueness, async (req, res) => {
       if (ValidateEmail(req.body.email)) {
         return res.send({ sucess: false, msg: "Write correct mail format" });
       }
-      await bcrypt.hash(obj.password, saltRounds, async function (err, hash) {
-        if (err) {
-          throw res.send("error");
+      obj.password=await bcrypt.hash(obj.password, saltRounds, );
+        if (type === "Company") {
+          await Company.create(obj);
+        } else if (type === "Event") {
+          await Event.create(obj);
         } else {
-          try {
-            obj.password = hash;
-            if (type === "Company") {
-              await Company.create(obj);
-            } else if (type === "Event") {
-              await Event.create(obj);
-            } else {
-              await Influencer.create(obj);
-            }
-          } catch (error) {
-            throw error;
-          }
+          let platformstr="platform";
+          obj[platformstr]=req.platform;
+          await Influencer.create(obj);
         }
-        return;
-      });
       return res.send({ success: true, msg: "Succesful" });
     } catch (error) {
-      console.log(error);
       return res.send({ sucess: false, msg: error });
     }
   }

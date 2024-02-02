@@ -2,6 +2,20 @@ const mongoose = require("mongoose");
 const Users = require("./Users");
 const { Schema } = mongoose;
 
+const Genres = [
+  "Technology",
+  "Fashion",
+  "Food and Beverage",
+  "Healthcare",
+  "Automotive",
+  "Entertainment",
+  "Finance",
+  "Travel",
+  "Education",
+  "Sports",
+  "Retail",
+  "Other",
+];
 const CompanySchema = Users.discriminator(
   "Company",
   new Schema({
@@ -12,6 +26,7 @@ const CompanySchema = Users.discriminator(
     genre: {
       type: String,
       required: true,
+      enums: Genres,
     },
     products_id: {
       type: Array,

@@ -12,7 +12,7 @@ app.post("/addevent", CheckUser, async (req, res) => {
     });
   }
   try {
-    const { name, datetime, theme, venue, venuelink, expectedbudget } =
+    const { name, datetime, theme, venue, venuelink, expectedbudget,images } =
       req.body;
     const userid = req.user_id;
     const monthNames = [
@@ -55,6 +55,7 @@ app.post("/addevent", CheckUser, async (req, res) => {
       userid,
       months,
       years,
+      images
     };
     const adder = await Event.create(AddEvent);
     const eventcompany = await EventManager.findById(userid);
@@ -74,23 +75,9 @@ app.post("/addevent", CheckUser, async (req, res) => {
   }
 });
 
-app.get("/get-event/:id", CheckUser, async function (req, res) {
-  if (!req.checker || req.type !== "Event") {
-    res.status(201).json({
-      success: false,
-      message: "User Not Found!",
-    });
-  }
-  try {
-    const response = await Event.findById(req.params.id);
-    return res.send({ success: true, event: response });
-  } catch (error) {
-    return res.send({ success: false, error: error });
-  }
-});
 
 app.post("/get-all-events-by-month-year", CheckUser, async function (req, res) {
-  if (!req.checker || req.type !== "Event") {
+  if (!req.checker) {
     res.status(201).json({
       success: false,
       message: "User Not Found!",

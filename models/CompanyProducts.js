@@ -13,11 +13,11 @@ const CompanyProducts = new Schema({
   price: {
     type: Number,
     required: true,
-    enum: [1, 2, 3, 4, 5],
   },
-  categories: {
-    type: Array,
+  category: {
+    type: String,
     required: true,
+    enums:["Technology", "Fashion", "Food and Beverage", "Healthcare", "Automotive", "Entertainment", "Finance", "Travel", "Education", "Sports", "Retail", "Other"]
   },
   images: {
     //not required because it might be a service that is to be sponsored (eg:UrbanCompany)

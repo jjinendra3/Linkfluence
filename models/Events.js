@@ -13,7 +13,7 @@ const Events = new Schema({
   theme: {
     type: String,
     required: true,
-    enum: ["Technology", "Comedy", "Music", "Food Festival"],
+    enum: ["Technology", "Comedy", "Music", "Food Festival"]
   },
   venue: {
     type: String,
@@ -42,7 +42,7 @@ const Events = new Schema({
   images: {
     type: Array,
     required: true,
-    default: [""],
+    default: ["init"],
   },
 });
 

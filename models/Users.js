@@ -20,12 +20,6 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
-  verified: {
-    type: Number,
-    required: true,
-    default: 0,
-    enum: [-1, 0, 1], //0 is pending, -1 is rejected, 1 is approved
-  },
   photo: {
     type: String,
     default:
