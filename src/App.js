@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import AppState from "./context/AppState";
+import Posts from "./pages/Posts";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Router>
         <Routes>
           <Route exact path="/" element={<Home/>} />
+          <Route exact path="/posts" element={<Posts/>} />
         </Routes>
         <Navbar />
         <ToastContainer />

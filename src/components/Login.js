@@ -1,6 +1,7 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { toast } from "react-toastify";
+import AppContext from "../context/AppContext";
 const utype = {
   Influencer: "Influencer",
   Company: "Company",
@@ -11,12 +12,13 @@ const Login = ({ accType , setauthType}) => {
   const onChange = (e) => {
     setinfo({ ...info, [e.target.name]: e.target.value });
   };
+  const {setuserDetails} = useContext(AppContext);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { data } =  await axios.post("http://localhost:5000/auth/login", info);
     if (data.success) {
       localStorage.setItem("token",data.token);
-      
+      setuserDetails(data.obj);
     }
     else{
       toast.error(data.error);

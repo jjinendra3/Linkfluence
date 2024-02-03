@@ -11,7 +11,9 @@
   padding: 0;
   box-sizing: border-box;
 }
-
+body{
+  overflow-x: hidden;
+}
 .radio-inputs {
   display: flex;
   justify-content: center;
@@ -268,8 +270,8 @@
 
 .button-container {
   display: flex;
-  position: absolute;
-  bottom: 20px;
+  position: sticky;
+  bottom: 30px;
   left: 50%;
   transform: translate(-50%, 0);
   background-color: #00bfffdc;
@@ -303,4 +305,51 @@
 
 .icon {
   font-size: 20px;
+}
+
+.filters {
+  position: relative;
+  display: block;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.filter {
+  background-color: #dfdfdf;
+  color: #212121;
+  padding: 10px 15px;
+  font-size: 15px;
+  font-weight: bold;
+  border: 2px solid transparent;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  font-size: 13px;
+  position: absolute;
+  z-index: 1;
+  min-width: 200px;
+  background-color: #212121;
+  border: 2px solid #34c6d6;
+  border-radius: 0px 15px 15px 15px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+
+
+.dropdown-content #top:hover {
+  border-radius: 0px 13px 0px 0px;
+}
+
+.dropdown-content #bottom:hover {
+  border-radius: 0px 0px 13px 13px;
+}
+
+.filters:hover button {
+  border-radius: 15px 15px 0px 0px;
+}
+
+.filters:hover .dropdown-content {
+  display: block;
 }
