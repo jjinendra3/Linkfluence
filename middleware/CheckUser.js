@@ -1,17 +1,22 @@
 const jwt = require("jsonwebtoken");
+
 const CheckUser = async (req, res, next) => {
-  let header = req.header("auth-token");
-  let privateKey = "YOUR_PRIVATE_KEY";
-  await jwt.verify(header, privateKey, function (err, decoded) {
-    if (err) {
-      req.checker = 0;
-      return;
+  try {
+    const token = req.header("auth-token");
+    if (!token) {
+      return res.status(401).json({ error: "Unauthorized: Token missing" });
     }
-    req.user_id = decoded.key;
-    req.type = decoded.type;
+    const privateKey = "YOUR_PRIVATE_KEY";
+    const decodedToken = await jwt.verify(token, privateKey);
+    req.user_id = decodedToken.key;
+    req.type = decodedToken.type;
     req.checker = 1;
-    return;
-  });
-  next();
+    next();
+  } catch (error) {
+    console.error("Token verification error:", error.message);
+    req.checker = 0;
+    return res.status(401).json({ error: "Unauthorized: Invalid token" });
+  }
 };
+
 module.exports = CheckUser;

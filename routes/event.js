@@ -5,15 +5,23 @@ const EventManager = require("../models/EventManagement");
 const CheckUser = require("../middleware/CheckUser");
 
 app.post("/addevent", CheckUser, async (req, res) => {
-  if (!req.checker || req.type !== "Event") {
-    res.status(201).json({
+  if (!req.checker || req.type !== "Event" || req.user_id === undefined) {
+    return res.status(201).json({
       success: false,
       message: "User Not Found!",
     });
   }
   try {
-    const { name, datetime, theme, venue, venuelink, expectedbudget,images } =
-      req.body;
+    const {
+      name,
+      datetime,
+      desc,
+      theme,
+      venue,
+      venuelink,
+      expectedbudget,
+      images,
+    } = req.body;
     const userid = req.user_id;
     const monthNames = [
       "January",
@@ -55,7 +63,8 @@ app.post("/addevent", CheckUser, async (req, res) => {
       userid,
       months,
       years,
-      images
+      images,
+      desc,
     };
     const adder = await Event.create(AddEvent);
     const eventcompany = await EventManager.findById(userid);
@@ -67,14 +76,12 @@ app.post("/addevent", CheckUser, async (req, res) => {
       event: AddEvent,
     });
   } catch (error) {
-    console.error("Error adding event:", error);
     res.status(500).json({
       success: false,
       error: "Internal Server Error",
     });
   }
 });
-
 
 app.post("/get-all-events-by-month-year", CheckUser, async function (req, res) {
   if (!req.checker) {

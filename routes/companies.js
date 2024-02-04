@@ -4,7 +4,6 @@ const CompanyProducts = require("../models/CompanyProducts");
 const Company = require("../models/Company");
 const CheckUser = require("../middleware/CheckUser");
 
-
 app.post("/add-company-product", CheckUser, async (req, res) => {
   if (!req.checker || req.type !== "Company") {
     res.status(201).json({
@@ -13,8 +12,8 @@ app.post("/add-company-product", CheckUser, async (req, res) => {
     });
   }
   try {
-    const { name, desc, price, category,  images } = req.body;
-    let userid=req.user_id;
+    const { name, desc, price, category, images } = req.body;
+    let userid = req.user_id;
     const adder = await CompanyProducts.create({
       name: name,
       desc: desc,

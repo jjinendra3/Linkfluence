@@ -12,7 +12,7 @@ app.use("/auth", require("./routes/auth"));
 app.use("/companies", require("./routes/companies"));
 app.use("/events", require("./routes/event"));
 app.use("/image", require("./routes/image"));
-app.use("/common",require('./routes/common'));
+app.use("/common", require("./routes/common"));
 app.listen(5000, () => {
   console.log("Eventer");
 });

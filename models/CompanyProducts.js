@@ -17,7 +17,20 @@ const CompanyProducts = new Schema({
   category: {
     type: String,
     required: true,
-    enums:["Technology", "Fashion", "Food and Beverage", "Healthcare", "Automotive", "Entertainment", "Finance", "Travel", "Education", "Sports", "Retail", "Other"]
+    enums: [
+      "Technology",
+      "Fashion",
+      "Food and Beverage",
+      "Healthcare",
+      "Automotive",
+      "Entertainment",
+      "Finance",
+      "Travel",
+      "Education",
+      "Sports",
+      "Retail",
+      "Other",
+    ],
   },
   images: {
     //not required because it might be a service that is to be sponsored (eg:UrbanCompany)
