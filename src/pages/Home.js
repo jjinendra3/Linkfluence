@@ -12,7 +12,7 @@ const Home = () => {
       <div className="w-full h-full flex flex-row">
         <div className="container w-1/2 flex flex-col gap-10 justify-center">
           <div className="text-3xl font-extrabold text-center">
-            How do You Want to Use [app_name] ?
+            How do You Want to Use LinkFluence ?
           </div>
           <div className="radio-inputs flex flex-col">
             <label className="w-full m-0 p-0 flex justify-center">

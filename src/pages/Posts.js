@@ -7,24 +7,21 @@ import axios from "axios";
 const Posts = () => {
   const [listType, setlistType] = useState("events");
   const [list, setlist] = useState([]);
-  const [date, setdate] = useState({
-    month: "All",
-    year: "All",
-  });
+  const [date, setdate] = useState();
   const [genre, setgenre] = useState(["All"]);
   const [venue, setvenue] = useState(["All"]);
   const [budget, setbudget] = useState(["All"]);
-
+  const [sortby, setsortby] = useState({type:'All',order:1})
   useEffect(() => {
-    // const {data} = axios.post(`http://localhost:5000/${listType}/all`);
-    // setlist(data.items);
+    
   }, [listType]);
 
-  const fetchList = async (filter) => {
+  const fetchList = async () => {
     const { data } = await axios.post(`http://localhost:5000/${listType}/filtered`, {
+      sortby: sortby,
       date: {
-        selectedMonths: [date.month],
-        selectedYears: [date.year],
+        selectedMonths: [date.getMonth()],
+        selectedYears: [date.getYear()],
       },
       genre: genre,
       venue: venue,
@@ -32,18 +29,20 @@ const Posts = () => {
     });
     setlist(data.items);
   };
-
   return (
     <>
       <TopBar />
       <OptionsBar
         listType={listType}
         setlistType={setlistType}
+        date={date}
         setdate={setdate}
         setgenre={setgenre}
         setbudget={setbudget}
         setvenue={setvenue}
         fetchList={fetchList}
+        setsortby={setsortby}
+        sortby={sortby}
       />
       <div className="flex flex-wrap m-10 min-h-screen">
         {list.map((item) => {

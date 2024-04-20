@@ -1,15 +1,27 @@
 import React, { useContext } from "react";
 import AppContext from "../context/AppContext";
 import Select from "react-select";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 
 const Genre = [
-  { value: "All", label: "All" },
-  { value: "sample", label: "sample" },
-  { value: "sample", label: "sample" },
-  { value: "sample", label: "sample" },
-  { value: "sample", label: "sample" },
+   { value: "All", label: "All"},    
+   { value: "Fashion", label: "Fashion"},    
+   { value: "Fitness", label: "Fitness"},
+   { value: "Travel", label: "Travel"},
+   { value: "Beauty", label: "Beauty"},
+   { value: "Gaming", label: "Gaming"},
+   { value: "Food", label: "Food"},
+   { value: "Lifestyle", label: "Lifestyle"},
+   { value: "Technology", label: "Technology",},
+   { value: "Comedy", label: "Comedy"},
+   { value: "Music", label: "Music"},
+   { value: "Health", label: "Health"},
+   { value: "DIY", label: "DIY"},
+   { value: "Sports", label: "Sports"}
 ];
+
 const Budget = [
   { value: "All", label: "All" },
   { value: "$", label: "$" },
@@ -18,15 +30,14 @@ const Budget = [
 ];
 const Venue = [
   { value: "All", label: "All" },
-  { value: "sample", label: "sample" },
-  { value: "sample", label: "sample" },
-  { value: "sample", label: "sample" },
+  { value: "Delhi", label: "Delhi" },
+  { value: "Noida", label: "Noida" },
   { value: "sample", label: "sample" },
 ];
 
 const OptionsBar = (props) => {
   const { userDetails } = useContext(AppContext);
-  const { setlistType,genre,setgenre,setdate,venue,setvenue,budget,setbudget,fetchList } =
+  const { setlistType,genre,setgenre,date,setdate,venue,setvenue,budget,setbudget,fetchList,setsortby,sortby} =
     props;
   const handleGenre = (genres) => {
     const genreValues = genres.map(item => item.value);
@@ -98,7 +109,12 @@ const OptionsBar = (props) => {
         <div class="filters">
           <button class="filter">Sort By &nbsp; ▼</button>
           <div class="dropdown-content">
-            
+            <div className="flex flex-col bg-white text-black">
+                <button onClick={() => setsortby({type:'Genre',order:(sortby.order==1?0:1)})}>Genre {sortby.order===1?'↑':'↓'}</button>
+                <button onClick={() => setsortby({type:'Venue',order:(sortby.order==1?0:1)})}>Venue {sortby.order===1?'↑':'↓'}</button>
+                <button onClick={() => setsortby({type:'Date',order:(sortby.order==1?0:1)})}>Date {sortby.order===1?'↑':'↓'}</button>
+                <button onClick={() => setsortby({type:'Budget',order:(sortby.order==1?0:1)})}>Budget {sortby.order===1?'↑':'↓'}</button>
+              </div>
           </div>
         </div>
         <div class="filters">
@@ -150,7 +166,9 @@ const OptionsBar = (props) => {
         </div>
         <div class="filters">
           <button class="filter">Date &nbsp; ▼</button>
-          <div class="dropdown-content"></div>
+          <div class="dropdown-content">
+          <DatePicker selected={date} active onChange={handledate} />
+          </div>
         </div>
         <div>
         </div>

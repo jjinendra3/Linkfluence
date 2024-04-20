@@ -8,6 +8,22 @@ const utype = {
   Company: "Company",
   Event: "Event Organizer",
 };
+const Genre = [ 
+  { value: "Fashion", label: "Fashion"},    
+  { value: "Fitness", label: "Fitness"},
+  { value: "Travel", label: "Travel"},
+  { value: "Beauty", label: "Beauty"},
+  { value: "Gaming", label: "Gaming"},
+  { value: "Food", label: "Food"},
+  { value: "Lifestyle", label: "Lifestyle"},
+  { value: "Technology", label: "Technology",},
+  { value: "Comedy", label: "Comedy"},
+  { value: "Music", label: "Music"},
+  { value: "Health", label: "Health"},
+  { value: "DIY", label: "DIY"},
+  { value: "Sports", label: "Sports"}
+];
+
 const Register = ({ accType, setauthType }) => {
   const navigate = useNavigate();
   const [info, setinfo] = useState({ type: accType });
@@ -91,10 +107,9 @@ const Register = ({ accType, setauthType }) => {
         </label>
         <label>
           <select name="genre" onChange={onChange}>
-            <option value="comedy">Comedy</option>
-            <option value="food">food</option>
-            <option value="tech">tech</option>
-            <option value="cars">cars</option>
+            {Genre.map((genre)=>{
+              return <option value={genre.value}>{genre.value}</option>
+            })}
           </select>
         </label>
         {accType === "Influencer" ? (
