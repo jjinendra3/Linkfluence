@@ -8,22 +8,6 @@ const utype = {
   Company: "Company",
   Event: "Event Organizer",
 };
-const Genre = [ 
-  { value: "Fashion", label: "Fashion"},    
-  { value: "Fitness", label: "Fitness"},
-  { value: "Travel", label: "Travel"},
-  { value: "Beauty", label: "Beauty"},
-  { value: "Gaming", label: "Gaming"},
-  { value: "Food", label: "Food"},
-  { value: "Lifestyle", label: "Lifestyle"},
-  { value: "Technology", label: "Technology",},
-  { value: "Comedy", label: "Comedy"},
-  { value: "Music", label: "Music"},
-  { value: "Health", label: "Health"},
-  { value: "DIY", label: "DIY"},
-  { value: "Sports", label: "Sports"}
-];
-
 const Register = ({ accType, setauthType }) => {
   const navigate = useNavigate();
   const [info, setinfo] = useState({ type: accType });
@@ -32,23 +16,63 @@ const Register = ({ accType, setauthType }) => {
     setinfo({ ...info, [e.target.name]: e.target.value });
   };
   const handleAdd = (e) => {
-    // pending - validate link and identify platform
     e.preventDefault();
-    if (!isURL(info.platform) || !isURL(info.platform, { host_whitelist: ['facebook.com', 'twitter.com', 'instagram.com'] })){
-      setinfo({ ...info, platform: "" });
-      return;
-    }
+    // if (
+    //   !isURL(info.platform) ||
+    //   !isURL(info.platform, {
+    //     host_whitelist: ["facebook.com", "twitter.com", "instagram.com"],
+    //   })
+    // ) {
+    //   setinfo({ ...info, platform: "" });
+    //   return;
+    // }
     setPlatforms([...platforms, info.platform]);
     setinfo({ ...info, platform: "" });
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { data } =  await axios.post("http://localhost:5000/auth/signup", info);
+    if (info.password !== info.repassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+    const { tempData } = await axios.post(
+      "http://localhost:5000/image/uploadimage",
+      { images: info.photo }
+    );
+    if (tempData.success) {
+      info.photo = tempData.image[0];
+    } else {
+      toast.error(tempData.message);
+      return;
+    }
+    const form = new FormData();
+
+    if(accType==="influencer"){
+      form.append("platform", platforms);
+    }
+    else{
+      form.append("poc", info.poc);
+      if(accType==="event"){
+        form.append("prev_event_link", info.eventlink);
+      }
+    }
+    form.append("type", info.type);
+    form.append("name", info.name);
+    form.append("email", info.email);
+    form.append("phone", info.mobile);
+    form.append("password", info.password);
+    form.append("photo", info.photo);
+    form.append("genre", info.genre);
+    form.append("pricerange", info.price);
+
+    const { data } = await axios.post(
+      "http://localhost:5000/auth/signup",
+      form
+    );
     if (data.success) {
       toast.success(data.msg);
       setauthType("login");
-    }
-    else{
+    } else {
       toast.error(data.error);
     }
   };
@@ -82,36 +106,72 @@ const Register = ({ accType, setauthType }) => {
           />
           <span>Email</span>
         </label>
-
         <label>
           <input
             className="input"
-            type="password"
+            type="number"
             placeholder=""
             required
-            name="password"
+            name="mobile"
             onChange={onChange}
           />
-          <span>Password</span>
+          <span>Mobile no</span>
         </label>
+        <div className="flex gap-x-2">
+          <label>
+            <input
+              className="input"
+              type="password"
+              placeholder=""
+              required
+              name="password"
+              onChange={onChange}
+            />
+            <span>Password</span>
+          </label>
+          <label>
+            <input
+              className="input"
+              type="password"
+              placeholder=""
+              required
+              name="repassword"
+              onChange={onChange}
+            />
+            <span>Confirm password</span>
+          </label>
+        </div>
         <label>
           <input
             className="input"
-            type="password"
+            type="file"
             placeholder=""
             required
-            name="repassword"
+            name="photo"
             onChange={onChange}
+            value={info.photo}
           />
-          <span>Confirm password</span>
+          <span>Profile Photo</span>
         </label>
-        <label>
-          <select name="genre" onChange={onChange}>
-            {Genre.map((genre)=>{
-              return <option value={genre.value}>{genre.value}</option>
-            })}
-          </select>
-        </label>
+        <div className="flex gap-x-2">
+          <label className="flex-1">
+            <select name="genre" onChange={onChange}>
+              <option value="comedy">Comedy</option>
+              <option value="food">food</option>
+              <option value="tech">tech</option>
+              <option value="cars">cars</option>
+            </select>
+          </label>
+          <label className="flex-1">
+            <select name="price" onChange={onChange}>
+              <option value={1}>1</option>
+              <option value={2}>2</option>
+              <option value={3}>3</option>
+              <option value={4}>4</option>
+              <option value={5}>5</option>
+            </select>
+          </label>
+        </div>
         {accType === "Influencer" ? (
           <div>
             <label>
@@ -156,7 +216,7 @@ const Register = ({ accType, setauthType }) => {
               })}
             </div>
           </div>
-        ) : (
+        ) : accType === "Company" ? (
           <label>
             <input
               className="input"
@@ -168,6 +228,31 @@ const Register = ({ accType, setauthType }) => {
             />
             <span>POC</span>
           </label>
+        ) : (
+          <div className="flex gap-x-2">
+          <label>
+            <input
+              className="input"
+              type="text"
+              placeholder=""
+              required
+              name="poc"
+              onChange={onChange}
+            />
+            <span>POC</span>
+          </label>
+          <label>
+            <input
+              className="input"
+              type="text"
+              placeholder=""
+              required
+              name="eventlink"
+              onChange={onChange}
+            />
+            <span>Event Link</span>
+          </label>
+          </div>
         )}
         <button className="submit" onClick={handleSubmit}>
           SignUp
