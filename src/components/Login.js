@@ -2,12 +2,14 @@ import axios from "axios";
 import React, { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import AppContext from "../context/AppContext";
+import { useNavigate } from "react-router-dom";
 const utype = {
   Influencer: "Influencer",
   Company: "Company",
   Event: "Event Organizer",
 };
 const Login = ({ accType , setauthType}) => {
+  const Navigate = useNavigate();
   const [info, setinfo] = useState({ type: accType });
   const onChange = (e) => {
     setinfo({ ...info, [e.target.name]: e.target.value });
@@ -19,6 +21,8 @@ const Login = ({ accType , setauthType}) => {
     if (data.success) {
       localStorage.setItem("token",data.token);
       setuserDetails(data.obj);
+      toast.success("Login Successfull");
+      Navigate("/profile")
     }
     else{
       toast.error(data.error);
@@ -37,7 +41,7 @@ const Login = ({ accType , setauthType}) => {
             type="email"
             placeholder=""
             required
-            name="email"
+            name="id"
             onChange={onChange}
           />
           <span>Email</span>
@@ -48,7 +52,7 @@ const Login = ({ accType , setauthType}) => {
             type="password"
             placeholder=""
             required
-            name="password"
+            name="pw"
             onChange={onChange}
           />
           <span>Password</span>
