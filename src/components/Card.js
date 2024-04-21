@@ -9,13 +9,13 @@ const Card = ({ item }) => {
           <div class="flex flex-col">
             <div class="flex justify-between">
               <span class="text-xl font-bold">{item.name}</span>
-              <p class="text-gray-700">{item.organization}</p>
+              <p class="text-gray-700">{item.desc}</p>
             </div>
             <div className="flex justify-between">
               <span class="font-boldtext-black">
-                {"$".repeat(item.expectedbudget)}
+                {"$".repeat(item.category)}
               </span>
-              <span class="text-black">{item.theme}</span>
+              <span class="text-black">{item.price}</span>
             </div>
             <div className="flex justify-between">
               <p class="text-gray-700">{item.date.startdate}</p>

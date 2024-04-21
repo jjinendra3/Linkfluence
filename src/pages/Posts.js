@@ -5,29 +5,38 @@ import Card from "../components/Card";
 import axios from "axios";
 
 const Posts = () => {
-  const [listType, setlistType] = useState("events");
+  const [listType, setlistType] = useState("companyproduct");
   const [list, setlist] = useState([]);
-  const [date, setdate] = useState();
-  const [genre, setgenre] = useState(["All"]);
-  const [venue, setvenue] = useState(["All"]);
-  const [budget, setbudget] = useState(["All"]);
-  const [sortby, setsortby] = useState({type:'All',order:1})
+  const [date, setdate] = useState([new Date()]);
+  const [genre, setgenre] = useState([]);
+  const [venue, setvenue] = useState([]);
+  const [budget, setbudget] = useState([]);
+  const [sortby, setsortby] = useState("none");
   useEffect(() => {
-    
+    fetchList();
   }, [listType]);
 
   const fetchList = async () => {
-    const { data } = await axios.post(`http://localhost:5000/${listType}/filtered`, {
-      sortby: sortby,
-      date: {
-        selectedMonths: [date.getMonth()],
-        selectedYears: [date.getYear()],
-      },
-      genre: genre,
-      venue: venue,
-      budget: budget
-    });
-    setlist(data.items);
+    // console.log(budget)
+    const months = date.map((date) => date.toLocaleString('en-US', { month: 'long' }));
+    const years = date.map((date) => date.getFullYear());
+    const { data } = await axios.post(
+      `http://localhost:5000/common/filter/${listType}`,{},
+      // {
+      //   // selectedMonths: months,
+      //   // selectedYears: years,
+      //   // genre: genre,
+      //   // venue: venue,
+      //   // pricerange: budget.map((b)=> b.length),
+      // },
+      {
+        headers: {
+          "auth-token": `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiI2NWJkNDM4NWU1MGQ1NDI0NGU2MTEzMDgiLCJ0eXBlIjoiSW5mbHVlbmNlciIsImlhdCI6MTcwNzA2NTYxNH0.ACf0nxKHrZlHlOTtDnEuoQmzF6iDUMoJqtY_25zQEjc`,
+        },
+      }
+    );
+    // console.log(data.response)
+    setlist(data.response);
   };
   return (
     <>

@@ -23,7 +23,7 @@ function App() {
           <Route exact path="/influencer/:id" element={<Influencer/>} />
         </Routes>
         <Navbar />
-        <ToastContainer />
+        <ToastContainer/>
       </Router>
     </AppState>
   );
