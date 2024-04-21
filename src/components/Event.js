@@ -15,19 +15,25 @@ export default function Event(/*{ showModal, type, setShowModal }*/) {
     endDate: "",
     img: "",
   });
-  const AddEvent = async () => {
+
+  const AddEvent = async (e) => {
+    e.preventDefault();
+    if(ev.name===""||ev.theme===""||ev.budget===""||ev.description===""||ev.venue===""||ev.link===""||ev.startDate===""||ev.img===""){
+      toast.error("Please fill all the fields");
+      return;
+    }
     const form = new FormData();
+    let d= ev.startDate;
     form.append("name", ev.name);
+    form.append("datetime", {d:"0900-2100"});
     form.append("theme", ev.theme);
-    form.append("budget", ev.budget);
-    form.append("description", ev.description);
     form.append("venue", ev.venue);
-    form.append("link", ev.link);
-    form.append("startDate", ev.startDate);
-    form.append("endDate", ev.endDate);
+    form.append("venuelink", ev.link);
+    form.append("price", ev.budget);
+    form.append("desc", ev.description);
     const {tempData}= await axios.post("http://localhost:5000/image/uploadimage",{images:ev.img});
     if(tempData.success){
-      form.append("img", tempData.image[0]);
+      form.append("images", [tempData.image[0]]);
     }
     else{
       toast.error(tempData.message);
@@ -35,10 +41,11 @@ export default function Event(/*{ showModal, type, setShowModal }*/) {
     }
     let config = {
       headers: {
+        "content-type": "application/json",
         "auth-token": localStorage.getItem("auth-token")
       }
     }
-    const {data}= await axios.post("http://localhost:5000/events/addevent", form,config);
+    const {data}= await axios.post("http://localhost:5000/events/addevent",form,config);
     if(data.success){
       toast.success(data.message);
       setShowModal(false);
@@ -159,27 +166,15 @@ export default function Event(/*{ showModal, type, setShowModal }*/) {
                 </div>
                 <div className="mt-4 flex flex-row space-x-2">
                 <div className="flex-1">
-                    <label className="text-white" htmlFor="startDate">
-                      Start Date
+                    <label className="text-white" htmlFor="date">
+                      Date
                     </label>
                     <input
                       className="w-full bg-gray-800 rounded-md border-gray-700 text-white px-2 py-1"
                       type="date"
                       onChange={onChange}
                       name="startDate"
-                      value={ev.startDate}
-                    />
-                </div>
-                  <div className="flex-1">
-                    <label className="text-white" htmlFor="endDate">
-                      End Date
-                    </label>
-                    <input
-                      className="w-full bg-gray-800 rounded-md border-gray-700 text-white px-2 py-1"
-                      type="date"
-                      onChange={onChange}
-                      name="endDate"
-                      value={ev.endDate}
+                      value={ev.date}
                     />
                 </div>
                 </div>

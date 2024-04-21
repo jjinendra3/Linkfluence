@@ -1,10 +1,12 @@
 import React from "react";
 import Event from "../components/Event";
+import Product from "../components/Product";
 
 const Profile = () => {
   return (
     <>
-      <Event/>
+      {/* <Event/> */}
+      <Product/>
       <div className="cover w-full h-64 border-2 bg-gray-400"></div>
       <div className="profile-info flex flex-col items-center relative bottom-20 gap-y-5">
         <div className="profile-img size-52 bg-black rounded-xl"></div>
