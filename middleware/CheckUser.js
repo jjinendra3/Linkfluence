@@ -4,7 +4,7 @@ const CheckUser = async (req, res, next) => {
   try {
     const token = req.header("auth-token");
     if (!token) {
-      return res.status(401).json({ error: "Unauthorized: Token missing" });
+      return res.status(401).json({ success:0, error: "Unauthorized: Token missing" });
     }
     const privateKey = "YOUR_PRIVATE_KEY";
     const decodedToken = await jwt.verify(token, privateKey);

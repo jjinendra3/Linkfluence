@@ -14,5 +14,5 @@ app.use("/events", require("./routes/event"));
 app.use("/image", require("./routes/image"));
 app.use("/common", require("./routes/common"));
 app.listen(5000, () => {
-  console.log("Eventer");
+  console.log("Linkfluence");
 });

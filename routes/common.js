@@ -4,10 +4,9 @@ const Influencer = require("../models/Influencers");
 const CompanyProducts = require("../models/CompanyProducts");
 const Event = require("../models/Events");
 const Users = require("../models/Users");
-const Company = require("../models/Company");
 const CheckUser = require("../middleware/CheckUser");
-
-app.get("/get/:type/:id", CheckUser, async function (req, res) {
+const bcrypt=require("bcrypt");
+app.get("/get/:id", CheckUser, async function (req, res) {
   if (!req.checker) {
     return res.status(201).json({
       success: false,
@@ -15,38 +14,12 @@ app.get("/get/:type/:id", CheckUser, async function (req, res) {
     });
   }
   try {
-    let response;
-    let type = req.params.type;
-    if (type.toUpperCase() === "EVENT") {
-      response = await Event.findById(req.params.id);
-    } else if (type.toUpperCase() === "INFLUENCER") {
-      response = await Influencer.findById(req.params.id);
-    } else if (type.toUpperCase() === "COMPANYPRODUCT") {
-      response = await CompanyProducts.findById(req.params.id);
-      const company = await Company.findById(response.company_id);
-
-      const obj = {
-        _id: response._id,
-        name: response.name,
-        desc: response.desc,
-        price: response.price,
-        category: response.category,
-        images: response.images,
-        company_id: response.company_id,
-        __v: response.__v,
-        companyname: company.name,
-      };
-      response = obj;
-    } else {
-      return res.status(201).json({
-        success: false,
-        message: "Give Correct Type",
-      });
-    }
+    const response = await Users.findById(req.params.id);
+    response.password=null;
     return res.send({ success: true, response: response });
   } catch (error) {
-    console.log(error);
-    return res.send({ success: false, error: error });
+    const err=error.toString();
+    return res.send({ success: false, error: err });
   }
 });
 
@@ -128,4 +101,87 @@ app.get("/getprofile", CheckUser, async (req, res) => {
     return res.send({ success: false, error: "Not Found!" });
   }
 });
+
+
+app.post("/filter/:type", CheckUser, async (req, res) => {
+  if (!req.checker) {
+    return res.status(201).json({
+      success: false,
+      message: "User Not Found!",
+    });
+  }
+  try {
+    const { pricerange,genre,theme,venue,category,price,selectedMonths,selectedYears,badges } = req.body;
+    let query = {
+      $or:[]
+    };
+    if(pricerange!=undefined){//influencer
+      query.$or.push({pricerange:{$in:pricerange}});
+    }
+    if(genre!=undefined){//influencer
+      query.$or.push({genre:{$in:genre}});
+    }
+    if(badges!=undefined){
+      query.$or.push({badges:{$in:badges}});
+    }
+    if(theme!=undefined){//company & event
+      query.$or.push({theme:{$in:theme}});
+    }
+    if(venue!=undefined){//event
+      query.$or.push({venue:{$in:venue}});
+    }
+    if(category!=undefined){//company-products
+      query.$or.push({category:{$in:category}});
+    }
+    if(price!=undefined){//company-products
+      query.$or.push({price: { $gte: price.min, $lte: price.max }});
+    }
+    if(selectedMonths!=undefined && selectedYears!=undefined){//event
+      query.$or.push({$and: [
+        { months: { $in: selectedMonths } },
+        { years: { $in: selectedYears } },
+      ]});
+    }
+    let response;
+    if(req.params.type.toUpperCase()==="EVENT"){
+        response = await Event.find(query);
+    }else if(req.params.type.toUpperCase()==="INFLUENCER"){
+        response = await Influencer.find(query);
+    }else if(req.params.type.toUpperCase()==="COMPANYPRODUCT"){
+        response = await CompanyProducts.find(query);
+    }
+    return res.send({ success: true, response: response });
+  } catch (error) {
+    const err=error.toString();
+    return res.send({ success: false, error: err });
+  }
+});
+
+ app.post("updateprofile", CheckUser, async (req, res) => {
+  if (!req.checker) {
+    return res.status(201).json({
+      success: false,
+      message: "User Not Found!",
+    });
+  }
+  try {
+    const { name, email, password, phone, photo, pricerange,poc,genre } = req.body;
+    password = await bcrypt.hash(password, 10);
+    let user = await Users.findById(req.user_id);
+    user.name = name;
+    user.email = email;
+    user.password = password;
+    user.phone = phone;
+    user.photo = photo;
+    user.pricerange = pricerange;
+    user.genre=genre?user.genre:genre;
+    user.poc=poc?user.poc:poc;
+    user.platform=platform?user.platform:platform;
+    await user.save();
+    return res.send({ success: true, message: "Profile Updated" });
+  } catch (error) {
+    const err=error.toString();
+    return res.send({ success: false, error: err });
+  }
+ })
 module.exports = app;

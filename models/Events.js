@@ -23,7 +23,7 @@ const Events = new Schema({
     type: String, //please check whether this is a valid google maps link
     required: true,
   },
-  expectedbudget: {
+  price: {
     type: Number,
     required: true,
   },

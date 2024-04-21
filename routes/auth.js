@@ -19,14 +19,14 @@ function ValidateEmail(mail) {
 app.post("/signup", uniqueness, Followers, async (req, res) => {
   if (req.error) {
     return res.send({
-      sucess: false,
+      success: false,
       msg: "Platform verification error.",
     });
   }
   if (!req.checker) {
     return res.send({
-      sucess: false,
-      msg: "User already existsusing phone/mail.",
+      success: false,
+      msg: "User already exists using phone/mail.",
     });
   } else {
     try {
@@ -34,7 +34,7 @@ app.post("/signup", uniqueness, Followers, async (req, res) => {
       const type = obj.type;
       delete obj.type;
       if (ValidateEmail(req.body.email)) {
-        return res.send({ sucess: false, msg: "Write correct mail format" });
+        return res.send({ success: false, msg: "Write correct mail format" });
       }
       obj.password = await bcrypt.hash(obj.password, saltRounds);
       if (type === "Company") {
@@ -48,7 +48,7 @@ app.post("/signup", uniqueness, Followers, async (req, res) => {
       }
       return res.send({ success: true, msg: "Succesful" });
     } catch (error) {
-      return res.send({ sucess: false, msg: error });
+      return res.send({ success: false, msg: error });
     }
   }
 });

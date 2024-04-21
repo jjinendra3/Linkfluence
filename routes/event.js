@@ -83,58 +83,5 @@ app.post("/addevent", CheckUser, async (req, res) => {
   }
 });
 
-app.post("/get-all-events-by-month-year", CheckUser, async function (req, res) {
-  if (!req.checker) {
-    res.status(201).json({
-      success: false,
-      message: "User Not Found!",
-    });
-  }
-  try {
-    const { selectedMonths, selectedYears } = req.body;
-    if (!selectedMonths || !selectedYears) {
-      return res.status(400).json({
-        success: false,
-        message: "Selected months and years are required in the request body.",
-      });
-    }
-
-    const events = await Event.find({
-      $or: [
-        {
-          $and: [
-            { months: { $in: selectedMonths } },
-            { years: { $in: selectedYears } },
-          ],
-        },
-        {
-          $and: [
-            { months: { $in: selectedMonths } },
-            { years: { $in: selectedYears.map((year) => year.toString()) } },
-          ],
-        },
-      ],
-    });
-    const projectedEvents = events.map((event) => ({
-      _id: event._id,
-      name: event.name,
-      datetime: event.datetime,
-      theme: event.theme,
-      venue: event.venue,
-      venuelink: event.venuelink,
-      firstImage: event.images[0],
-    }));
-    return res.status(200).json({
-      success: true,
-      events: projectedEvents,
-    });
-  } catch (error) {
-    console.error("Error retrieving events:", error);
-    return res.status(500).json({
-      success: false,
-      error: "Internal Server Error",
-    });
-  }
-});
 
 module.exports = app;
